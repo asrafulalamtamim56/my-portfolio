@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — aSRAFUL | People, Operations & Culture</title>
+    <!-- Google Fonts for exact Inkwell layout -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,700;0,6..72,800;1,6..72,400;1,6..72,600;1,6..72,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #faf7f2;
+            --bg-card: #ffffff;
+            --bg-dark: #12100e;
+            --text-dark: #161513;
+            --text-muted: #6b665f;
+            --accent-terracotta: #bf5b33;
+            --border-color: #eae5dc;
+            --tag-bg: #efebe4;
+            
+            --font-serif-hero: 'Newsreader', 'Playfair Display', Georgia, serif;
+            --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-script: 'Caveat', cursive;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Combined Petals & Glowfly Canvas */
+        #interactive-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* Follower Cursor */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-terracotta);
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
+        }
+
+        .cursor-ring {
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid rgba(191, 91, 51, 0.45);
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .cursor-hover .cursor-dot {
+            width: 4px;
+            height: 4px;
+            background-color: #fff;
+        }
+        .cursor-hover .cursor-ring {
+            width: 54px;
+            height: 54px;
+            background-color: rgba(191, 91, 51, 0.18);
+            border-color: var(--accent-terracotta);
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 1. Header Navigation */
+        header.site-header {
+            padding: 26px 0;
+        }
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: var(--font-serif-hero);
+            font-size: 2.15rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .logo .logo-small-a {
+            font-style: italic;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--accent-terracotta);
+            margin-right: 1px;
+            line-height: 1;
+        }
+
+        .logo .logo-caps {
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            font-size: 1.95rem;
+        }
+
+        .logo-l-plant {
+            position: relative;
+            display: inline-flex;
+            align-items: flex-end;
+            margin-left: 1px;
+        }
+
+        .flower-growing-out {
+            position: absolute;
+            left: 2px;
+            bottom: 4px;
+            width: 42px;
+            height: 54px;
+            pointer-events: none;
+            transform-origin: bottom left;
+            animation: plantBreeze 4s infinite ease-in-out;
+        }
+
+        .flower-growing-out svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        @keyframes plantBreeze {
+            0%, 100% { transform: rotate(0deg); }
+            35% { transform: rotate(7deg) translateY(-1px); }
+            70% { transform: rotate(-4deg) translateY(0px); }
+        }
+
+        /* Nav Menu (Home, About, Blog, Categories - Contact removed) */
+        .main-menu {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        .main-menu a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .main-menu a:hover, .main-menu a.active {
+            color: var(--accent-terracotta);
+        }
+
+        /* Ambient 'Hire Me' Button */
+        .hire-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hire-aura-glow {
+            position: absolute;
+            width: 105%;
+            height: 110%;
+            background: radial-gradient(circle, rgba(191, 91, 51, 0.45) 0%, rgba(224, 142, 101, 0.25) 50%, transparent 75%);
+            filter: blur(12px);
+            border-radius: 40px;
+            opacity: 0.75;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+            animation: auraBreathing 3.5s infinite ease-in-out;
+        }
+
+        @keyframes auraBreathing {
+            0%, 100% { transform: scale(0.96); opacity: 0.6; }
+            50% { transform: scale(1.08); opacity: 0.95; }
+        }
+
+        .btn-hire-lux {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 22px;
+            border-radius: 40px;
+            background: #141210;
+            color: #ffffff;
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(235, 178, 147, 0.3);
+            box-shadow: 0 4px 20px rgba(18, 16, 14, 0.15);
+            transition: all 0.35s cubic-bezier(0.2, 1, 0.3, 1);
+            overflow: hidden;
+            outline: none;
+        }
+
+        .status-beacon {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: beaconPulse 2s infinite;
+        }
+
+        @keyframes beaconPulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1.15); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .btn-hire-label {
+            font-family: var(--font-body);
+            font-weight: 600;
+            background: linear-gradient(180deg, #ffffff 0%, #ede8e3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-arrow-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: rgba(191, 91, 51, 0.22);
+            border: 1px solid rgba(191, 91, 51, 0.4);
+            border-radius: 50%;
+            font-size: 0.75rem;
+            color: #ffbe98;
+            transition: all 0.3s ease;
+        }
+
+        .hire-wrapper:hover .btn-hire-lux {
+            background: #1c1815;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(191, 91, 51, 0.4);
+        }
+
+        /* 1. Hero Profile */
+        .about-hero {
+            padding: 50px 0 80px 0;
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.85fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .sub-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .dot-badge {
+            width: 9px;
+            height: 9px;
+            background-color: #d6987c;
+            border-radius: 50%;
+        }
+        .tag-text {
+            font-family: var(--font-script);
+            font-size: 1.45rem;
+            color: var(--accent-terracotta);
+        }
+        .about-title {
+            font-family: var(--font-serif-hero);
+            font-size: 4.4rem;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+        }
+        .about-title .italic-accent {
+            font-style: italic;
+            font-weight: 400;
+            color: var(--accent-terracotta);
+        }
+        .about-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+            margin-bottom: 35px;
+            max-width: 520px;
+        }
+        .about-btns {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+        .btn-pill-dark {
+            background: var(--text-dark);
+            color: #fff;
+            padding: 13px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+        .btn-pill-dark:hover { opacity: 0.9; }
+        .btn-pill-outline {
+            border: 1px solid #d5cfc4;
+            color: var(--text-dark);
+            padding: 13px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .btn-pill-outline:hover { background: #f0eae0; }
+        .stats-pills-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .stat-pill {
+            background: #f0eae1;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Avatar Card */
+        .avatar-holder-card {
+            position: relative;
+            background: #f4efe6;
+            border-radius: 28px;
+            padding: 30px 20px 0 20px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.04);
+        }
+        .lego-avatar-svg {
+            width: 100%;
+            max-width: 290px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            filter: drop-shadow(0 12px 20px rgba(0,0,0,0.08));
+        }
+        .floating-widget {
+            position: absolute;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            text-align: left;
+            z-index: 10;
+        }
+        .widget-top-left {
+            top: -20px;
+            left: -35px;
+        }
+        .widget-bottom-right {
+            bottom: 40px;
+            right: -30px;
+        }
+        .float-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .float-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-top: 2px;
+        }
+        .float-sub {
+            font-size: 0.78rem;
+            color: var(--accent-terracotta);
+            font-weight: 600;
+        }
+
+        /* 2. Full Milestone Chronology */
+        .section-separator {
+            text-align: center;
+            margin: 70px 0 50px;
+        }
+        .section-separator .sub-tag {
+            justify-content: center;
+        }
+        .section-separator h2 {
+            font-family: var(--font-serif-hero);
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 6px;
+        }
+        .section-separator p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-style: italic;
+        }
+
+        .timeline-container {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto 90px;
+            padding: 20px 0;
+        }
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: var(--border-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .timeline-row {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        .timeline-row.left {
+            left: 0;
+            text-align: right;
+        }
+        .timeline-row.right {
+            left: 50%;
+            text-align: left;
+        }
+        .timeline-row::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            right: -7px;
+            background-color: var(--bg-cream);
+            border: 3px solid var(--accent-terracotta);
+            top: 30px;
+            border-radius: 50%;
+            z-index: 2;
+        }
+        .timeline-row.right::after {
+            left: -7px;
+        }
+        
+        .timeline-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+        .timeline-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(191, 91, 51, 0.12);
+            border-color: rgba(191, 91, 51, 0.4);
+        }
+        .timeline-date-tag {
+            font-family: var(--font-serif-hero);
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--accent-terracotta);
+            margin-bottom: 6px;
+        }
+        .timeline-date-tag span {
+            font-size: 0.78rem;
+            font-family: var(--font-body);
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-left: 6px;
+        }
+        .timeline-card h3 {
+            font-family: var(--font-serif-hero);
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .timeline-card p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .timeline-bottom-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .timeline-row.left .timeline-bottom-meta {
+            flex-direction: row-reverse;
+        }
+        .timeline-badge {
+            display: inline-block;
+            background: var(--tag-bg);
+            padding: 4px 12px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .timeline-click-hint {
+            font-size: 0.75rem;
+            color: var(--accent-terracotta);
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* 3. Craft & Capabilities */
+        .craft-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 60px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 50px;
+            margin-bottom: 90px;
+        }
+        .craft-left h2 {
+            font-family: var(--font-serif-hero);
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+        .craft-left p.craft-lead {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+        .skill-bar-item {
+            margin-bottom: 22px;
+        }
+        .skill-bar-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+        .skill-track {
+            width: 100%;
+            height: 6px;
+            background: #eee7dd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .skill-fill {
+            height: 100%;
+            background: var(--accent-terracotta);
+            border-radius: 10px;
+        }
+        .tools-group {
+            margin-bottom: 25px;
+        }
+        .tools-group h4 {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .pills-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tech-pill {
+            background: var(--tag-bg);
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .tech-pill:hover {
+            border-color: var(--accent-terracotta);
+            background: #ffffff;
+        }
+
+        /* 4. Contact Section */
+        .contact-invite-box {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 55px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 50px;
+            align-items: center;
+            margin-bottom: 90px;
+        }
+        .contact-invite-box h2 {
+            font-family: var(--font-serif-hero);
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 15px;
+        }
+        .contact-invite-box p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 25px;
+        }
+        .social-cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .social-link-card {
+            background: var(--bg-cream);
+            border: 1px solid var(--border-color);
+            padding: 18px 24px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: all 0.2s;
+        }
+        .social-link-card:hover {
+            background: #ffffff;
+            border-color: var(--accent-terracotta);
+            transform: translateX(4px);
+        }
+        .phone-card-highlight {
+            background: #fdfaf6;
+            border-color: rgba(191, 91, 51, 0.4);
+        }
+        .phone-val-text {
+            font-family: var(--font-body);
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--accent-terracotta);
+            letter-spacing: 0.5px;
+        }
+
+        /* 5. Refined Dark Editorial Footer */
+        footer.site-footer {
+            background: var(--bg-dark);
+            color: #ffffff;
+            padding: 80px 0 35px;
+            position: relative;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 45px;
+            border-bottom: 1px solid #231f1c;
+            padding-bottom: 50px;
+            margin-bottom: 30px;
+        }
+        .footer-logo {
+            font-family: var(--font-serif-hero);
+            font-size: 2.1rem;
+            color: #ffffff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .footer-logo .logo-small-a {
+            font-style: italic;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--accent-terracotta);
+            margin-right: 1px;
+            line-height: 1;
+        }
+        .footer-logo .logo-caps {
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            font-size: 1.95rem;
+        }
+        .footer-desc {
+            color: #8c857b;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            max-width: 320px;
+        }
+        .footer-col h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999083;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .footer-col ul {
+            list-style: none;
+        }
+        .footer-col li {
+            margin-bottom: 12px;
+        }
+        .footer-col a {
+            color: #d1cbc1;
+            text-decoration: none;
+            font-size: 0.92rem;
+            transition: color 0.2s ease, transform 0.2s ease;
+            display: inline-block;
+        }
+        .footer-col a:hover {
+            color: var(--accent-terracotta);
+            transform: translateX(2px);
+        }
+
+        /* Footer Bottom Bar */
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #7d756b;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .footer-craft-msg {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .heart-icon {
+            color: var(--accent-terracotta);
+            display: inline-block;
+        }
+        .back-to-top {
+            color: #d1cbc1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: #1e1b18;
+            border: 1px solid #2f2a25;
+            transition: all 0.3s ease;
+        }
+        .back-to-top:hover {
+            background: var(--accent-terracotta);
+            color: #fff;
+            border-color: var(--accent-terracotta);
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .custom-modal-backdrop {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(18, 16, 14, 0.78);
+            backdrop-filter: blur(10px);
+            z-index: 100000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .custom-modal-backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .custom-modal-card {
+            background: #faf6f0;
+            border: 1px solid #dfd8cc;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 580px;
+            padding: 45px 40px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+            position: relative;
+            transform: translateY(30px) scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background-image: radial-gradient(#e5ddd2 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .custom-modal-backdrop.open .custom-modal-card {
+            transform: translateY(0) scale(1);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: #ede6dc;
+            border: none;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            outline: none;
+        }
+        .modal-close-btn:hover {
+            background: var(--accent-terracotta);
+            color: #fff;
+            transform: rotate(90deg);
+        }
+        .modal-stamp {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ede6dc;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--accent-terracotta);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .modal-period {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+        .modal-title {
+            font-family: var(--font-serif-hero);
+            font-size: 2.1rem;
+            line-height: 1.2;
+            color: var(--text-dark);
+            margin: 14px 0 8px;
+        }
+        .modal-sub {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-terracotta);
+            margin-bottom: 16px;
+            display: block;
+        }
+        .modal-body {
+            font-size: 0.98rem;
+            color: #4a453e;
+            line-height: 1.75;
+            margin-bottom: 25px;
+        }
+        .modal-tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .modal-badge-pill {
+            background: #ede6dc;
+            border: 1px solid #d5cfc4;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        @media (max-width: 850px) {
+            .about-grid, .craft-grid, .contact-invite-box, .footer-grid { grid-template-columns: 1fr; }
+            .about-title { font-size: 3.2rem; }
+            .floating-widget { position: static; margin-bottom: 10px; }
+            .main-menu { display: none; }
+            .timeline-container::after { left: 20px; }
+            .timeline-row { width: 100%; padding-left: 50px; padding-right: 15px; }
+            .timeline-row.left, .timeline-row.right { left: 0; text-align: left; }
+            .timeline-row::after, .timeline-row.right::after { left: 13px; }
+            .timeline-row.left .timeline-bottom-meta { flex-direction: row; }
+            .custom-modal-card { padding: 30px 20px; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+            * { cursor: auto !important; }
+            .cursor-dot, .cursor-ring { display: none; }
+        }
+    </style>
+</head>
+<body id="top">
+
+    <!-- Interactive Canvas -->
+    <canvas id="interactive-canvas"></canvas>
+
+    <!-- Follower Cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- 1. Milestone Details Modal -->
+    <div class="custom-modal-backdrop" id="milestoneModal">
+        <div class="custom-modal-card">
+            <button class="modal-close-btn" id="closeMilestoneModal">&times;</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #d5cfc4; padding-bottom: 14px;">
+                <div class="modal-stamp" id="modalTag">ACADEMIC MILESTONE</div>
+                <div class="modal-period" id="modalYear">2023 – 2025</div>
+            </div>
+
+            <h3 class="modal-title" id="modalInstitution">Bangladesh University of Professionals</h3>
+            <span class="modal-sub" id="modalMajor">Master of Business Administration (HRM)</span>
+            <p class="modal-body" id="modalDescription">Detailed information will appear here dynamically on clicking any milestone card.</p>
+
+            <div class="modal-tag-row" id="modalBadges">
+                <span class="modal-badge-pill">Human Resource Management</span>
+                <span class="modal-badge-pill">BUP</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Letter Modal -->
+    <div class="custom-modal-backdrop" id="letterModal">
+        <div class="custom-modal-card">
+            <button class="modal-close-btn" id="closeLetterBtn">&times;</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #d5cfc4; padding-bottom: 14px;">
+                <div class="modal-stamp">💌 Executive Letter</div>
+                <div class="modal-period" id="currentLetterTime">Dhaka, BD</div>
+            </div>
+
+            <h3 class="modal-title" style="font-size: 2rem;">Dear Collaborator,</h3>
+            <p class="modal-body">
+                Thank you for reviewing my complete profile! I specialize in recruitment pipelines, HR documentation, payroll operations, and workforce compliance. Let's create an inspiring workplace together.
+            </p>
+
+            <span style="font-family: var(--font-script); font-size: 1.8rem; color: var(--accent-terracotta); margin-bottom: 25px; display: block;">— Asraful Alam Tamim</span>
+
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <a href="mailto:contact@asrafulalamtamim.xyz" style="background: var(--accent-terracotta); color: #fff; text-decoration: none; padding: 12px 26px; border-radius: 30px; font-size: 0.9rem; font-weight: 600;">Send Direct Email →</a>
+                <a href="https://wa.me/8809696290196" target="_blank" style="background: #ede6dc; color: var(--text-dark); text-decoration: none; padding: 12px 22px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; border: 1px solid #d5cfc4;">WhatsApp Chat</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="site-header">
+        <div class="container nav-wrapper">
+            <!-- Header Logo -->
+            <a href="index.html" class="logo">
+                <span class="logo-small-a">a</span><span class="logo-caps">SRAFU</span>
+                <span class="logo-l-plant">
+                    <span class="logo-caps">L</span>
+                    <span class="flower-growing-out">
+                        <svg viewBox="0 0 46 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 52 C3 34, 12 24, 26 14" stroke="#5a7042" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M8 36 C13 33, 17 37, 14 42 C10 42, 8 38, 8 36 Z" fill="#6c884f"/>
+                            <path d="M16 25 C14 20, 19 18, 22 21 C22 24, 18 26, 16 25 Z" fill="#7d9c5a"/>
+                            <g transform="translate(26, 14) rotate(24)">
+                                <ellipse cx="0" cy="-9" rx="3.8" ry="5.5" fill="#bf5b33"/>
+                                <ellipse cx="0" cy="9" rx="3.8" ry="5.5" fill="#bf5b33"/>
+                                <ellipse cx="-9" cy="0" rx="5.5" ry="3.8" fill="#bf5b33"/>
+                                <ellipse cx="9" cy="0" rx="5.5" ry="3.8" fill="#bf5b33"/>
+                                <ellipse cx="-6.2" cy="-6.2" rx="4" ry="5" transform="rotate(-45 -6.2 -6.2)" fill="#d9754e"/>
+                                <ellipse cx="6.2" cy="-6.2" rx="4" ry="5" transform="rotate(45 6.2 -6.2)" fill="#d9754e"/>
+                                <ellipse cx="-6.2" cy="6.2" rx="4" ry="5" transform="rotate(45 -6.2 6.2)" fill="#d9754e"/>
+                                <ellipse cx="6.2" cy="6.2" rx="4" ry="5" transform="rotate(-45 6.2 6.2)" fill="#d9754e"/>
+                                <circle cx="0" cy="0" r="3.8" fill="#faf7f2" stroke="#bf5b33" stroke-width="1.3"/>
+                                <circle cx="0" cy="0" r="1.8" fill="#bf5b33"/>
+                            </g>
+                        </svg>
+                    </span>
+                </span>
+            </a>
+
+            <!-- Updated Nav Menu (Contact removed) -->
+            <ul class="main-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#" class="active">About</a></li>
+                <li><a href="index.html#stories">Blog</a></li>
+                <li><a href="index.html#topics">Categories</a></li>
+            </ul>
+            
+            <!-- Ambient 'Hire Me' Button -->
+            <div class="hire-wrapper">
+                <div class="hire-aura-glow"></div>
+                <button class="btn-hire-lux" id="hireMeTrigger">
+                    <span class="status-beacon"></span>
+                    <span class="btn-hire-label">Hire Me</span>
+                    <span class="btn-arrow-badge">✉️</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 1. Hero About Profile -->
+        <section class="about-hero">
+            <div class="about-grid">
+                <div>
+                    <div class="sub-tag">
+                        <span class="dot-badge"></span>
+                        <span class="tag-text">Hi, I'm Asraful Alam Tamim</span>
+                    </div>
+
+                    <h1 class="about-title">
+                        Executive, strategist,<br>
+                        <span class="italic-accent">people</span> & operations<br>
+                        — and proud of it.
+                    </h1>
+
+                    <p class="about-desc">
+                        I specialize in recruitment pipelines, HR documentation, payroll operations, and workforce compliance. Dedicated to building transparent workplace systems and helping talent thrive within progressive organizational structures.
+                    </p>
+
+                    <div class="about-btns">
+                        <a href="mailto:contact@asrafulalamtamim.xyz" class="btn-pill-dark">Get in Touch →</a>
+                        <a href="https://linkedin.com/in/asrafulalamtamim" target="_blank" class="btn-pill-outline">LinkedIn Scroll</a>
+                    </div>
+
+                    <div class="stats-pills-row">
+                        <div class="stat-pill">5+ Years Experience</div>
+                        <div class="stat-pill">MBA in HRM (BUP)</div>
+                        <div class="stat-pill">Labor Law Compliance</div>
+                    </div>
+                </div>
+
+                <!-- Avatar Card with LEGO Minifigure Artwork -->
+                <div class="avatar-holder-card">
+                    <div class="floating-widget widget-top-left">
+                        <div class="float-label">☕ Current Focus</div>
+                        <div class="float-title">HR & Operations</div>
+                        <div class="float-sub">People Strategy</div>
+                    </div>
+
+                    <!-- LEGO Minifigure SVG -->
+                    <svg class="lego-avatar-svg" viewBox="0 0 380 430" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="145" y="215" width="90" height="35" rx="6" fill="#c98a58"/>
+                        <rect x="110" y="85" width="160" height="145" rx="42" fill="#d99a68"/>
+                        <path d="M92 110 C85 30, 160 10, 200 10 C260 10, 305 40, 288 115 C275 60, 230 45, 190 45 C145 45, 105 70, 92 110 Z" fill="#16181b"/>
+                        <path d="M100 115 C95 85, 130 55, 185 55 C230 55, 275 80, 280 120 C280 155, 265 175, 260 180 C265 155, 265 110, 240 90 C215 70, 150 70, 120 115 Z" fill="#22252a"/>
+                        <path d="M140 38 C170 30, 230 30, 260 48 C240 40, 180 38, 140 38 Z" fill="#363b42"/>
+                        <path d="M136 128 C145 120, 165 120, 175 128" stroke="#16181b" stroke-width="7" stroke-linecap="round"/>
+                        <path d="M205 128 C215 120, 235 120, 244 128" stroke="#16181b" stroke-width="7" stroke-linecap="round"/>
+                        <path d="M187 132 Q190 125 193 132" stroke="#a66e44" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="158" cy="148" r="8.5" fill="#16181b"/>
+                        <circle cx="161" cy="145" r="3" fill="#ffffff"/>
+                        <circle cx="222" cy="148" r="8.5" fill="#16181b"/>
+                        <circle cx="225" cy="145" r="3" fill="#ffffff"/>
+                        <path d="M115 140 C118 205, 142 226, 190 226 C238 226, 262 205, 265 140 C265 178, 252 214, 190 214 C128 214, 115 178, 115 140 Z" fill="#16181b"/>
+                        <path d="M148 178 C160 168, 180 168, 190 174 C200 168, 220 168, 232 178 C222 190, 204 186, 190 188 C176 186, 158 190, 148 178 Z" fill="#16181b"/>
+                        <path d="M174 182 Q190 178 206 182" stroke="#16181b" stroke-width="4.5" stroke-linecap="round"/>
+                        <path d="M182 200 Q190 203 198 200" stroke="#16181b" stroke-width="4.5" stroke-linecap="round"/>
+                        <path d="M102 245 L278 245 L308 430 L72 430 Z" fill="#1b2a47"/>
+                        <polygon points="190,345 138,245 242,245" fill="#ffffff"/>
+                        <polygon points="138,245 158,300 190,270" fill="#eaeef5"/>
+                        <polygon points="242,245 222,300 190,270" fill="#eaeef5"/>
+                        <path d="M183 268 L197 268 L206 395 L190 415 L174 395 Z" fill="#2d68c4"/>
+                        <path d="M182 285 H198 M180 305 H200 M178 325 H202 M176 345 H204 M175 365 H205 M174 385 H206" stroke="#1e4685" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M190 268 V410" stroke="#1e4685" stroke-width="2"/>
+                        <path d="M138 245 L118 310 L168 375 L158 430" stroke="#0e1726" stroke-width="4.5" stroke-linejoin="round"/>
+                        <path d="M242 245 L262 310 L212 375 L222 430" stroke="#0e1726" stroke-width="4.5" stroke-linejoin="round"/>
+                        <rect x="238" y="325" width="30" height="5" rx="2" fill="#0e1726"/>
+                        <circle cx="178" cy="405" r="3.5" fill="#0e1726"/>
+                        <path d="M102 245 L50 340 C42 355, 52 370, 70 365 L96 330 L115 275 Z" fill="#152238"/>
+                        <path d="M278 245 L330 340 C338 355, 328 370, 310 365 L284 330 L265 275 Z" fill="#152238"/>
+                    </svg>
+
+                    <div class="floating-widget widget-bottom-right">
+                        <div class="float-label">🎓 Postgrad Degree</div>
+                        <div class="float-title">MBA in HRM</div>
+                        <div class="float-sub">BUP</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Detailed Chronological Milestones -->
+        <section id="experience">
+            <div class="section-separator">
+                <div class="sub-tag">
+                    <span class="dot-badge"></span>
+                    <span class="tag-text">The journey</span>
+                </div>
+                <h2>A few milestones</h2>
+                <p>Click on any milestone card to view detailed background & insights.</p>
+            </div>
+
+            <div class="timeline-container">
+                
+                <!-- 1. BUP (MBA) -->
+                <div class="timeline-row left">
+                    <div class="timeline-card" 
+                         data-tag="POSTGRADUATE DEGREE" 
+                         data-year="Class of 2023 – 2025" 
+                         data-institution="Bangladesh University of Professionals (BUP)" 
+                         data-major="MBA — Major: Human Resource Management (HRM)" 
+                         data-desc="Graduated with Master of Business Administration in HRM from Bangladesh University of Professionals. Specialized in strategic workforce planning, advanced labor law compliance, compensation structures, and leadership dynamics."
+                         data-badges="MBA Degree,BUP,Human Resources,Leadership">
+                        <div class="timeline-date-tag">2023 – 2025<span>Postgraduate</span></div>
+                        <h3>Bangladesh University of Professionals (BUP)</h3>
+                        <p>Master of Business Administration (MBA) — Major in Human Resource Management (HRM).</p>
+                        <div class="timeline-bottom-meta">
+                            <span class="timeline-badge">MBA Degree</span>
+                            <span class="timeline-click-hint">View details ↗</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Entering Job Life -->
+                <div class="timeline-row right">
+                    <div class="timeline-card" 
+                         data-tag="PROFESSIONAL CAREER" 
+                         data-year="2021 – Present" 
+                         data-institution="Corporate HR & Operations" 
+                         data-major="HR Executive — Operations & Talent Management" 
+                         data-desc="Stepped directly into full-time corporate HR roles, spearheading end-to-end recruitment pipelines, onboarding workflows, attendance logs, payroll calculations, and labor compliance."
+                         data-badges="Talent Acquisition,Payroll Vaults,Labor Compliance,Operations">
+                        <div class="timeline-date-tag">2021 – Present<span>Career Start</span></div>
+                        <h3>Professional HR & Operations</h3>
+                        <p>Leading recruitment, talent onboarding, payroll structures, employee relations, and administrative compliance.</p>
+                        <div class="timeline-bottom-meta">
+                            <span class="timeline-badge">Work Experience</span>
+                            <span class="timeline-click-hint">View details ↗</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Dhaka Commerce College (BBA) -->
+                <div class="timeline-row left">
+                    <div class="timeline-card" 
+                         data-tag="UNDERGRADUATE DEGREE" 
+                         data-year="Class of 2016 – 2021" 
+                         data-institution="Dhaka Commerce College (National University of Bangladesh)" 
+                         data-major="BBA — Major: Marketing" 
+                         data-desc="Completed Bachelor of Business Administration (BBA) under the National University of Bangladesh. Actively coordinated youth development initiatives and marketing activities as Training & Development Coordinator."
+                         data-badges="BBA Degree,DCC,National University,Marketing Club">
+                        <div class="timeline-date-tag">2016 – 2021<span>Undergraduate</span></div>
+                        <h3>Dhaka Commerce College (NU)</h3>
+                        <p>Bachelor of Business Administration (BBA) — Major in Marketing.</p>
+                        <div class="timeline-bottom-meta">
+                            <span class="timeline-badge">BBA Degree</span>
+                            <span class="timeline-click-hint">View details ↗</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Dhaka Commerce College (HSC) -->
+                <div class="timeline-row right">
+                    <div class="timeline-card" 
+                         data-tag="HIGHER SECONDARY CERTIFICATE" 
+                         data-year="2013 – 2015" 
+                         data-institution="Dhaka Commerce College (DCC)" 
+                         data-major="Higher Secondary Certificate (HSC) — Business Studies" 
+                         data-desc="Completed Higher Secondary Certificate (HSC) in Business Studies from Dhaka Commerce College (DCC), building solid foundations in commerce, finance, accounting, and management principles."
+                         data-badges="HSC Certificate,DCC,Business Studies">
+                        <div class="timeline-date-tag">2013 – 2015<span>Higher Secondary</span></div>
+                        <h3>Dhaka Commerce College — DCC</h3>
+                        <p>Higher Secondary Certificate (HSC) in Business Studies.</p>
+                        <div class="timeline-bottom-meta">
+                            <span class="timeline-badge">HSC</span>
+                            <span class="timeline-click-hint">View details ↗</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Monipur High School and College -->
+                <div class="timeline-row left">
+                    <div class="timeline-card" 
+                         data-tag="SECONDARY SCHOOL CERTIFICATE" 
+                         data-year="Class of 2006 – 2013" 
+                         data-institution="Monipur High School and College [MUBC]" 
+                         data-major="Secondary Education — Class 4 to Class 10 (SSC)" 
+                         data-desc="Attended Monipur High School and College (MUBC) from Class 4 through Class 10, completing the Secondary School Certificate (SSC) examination with strong academic discipline and teamwork."
+                         data-badges="SSC Certificate,MUBC,Class 4-10">
+                        <div class="timeline-date-tag">2006 – 2013<span>Secondary (SSC)</span></div>
+                        <h3>Monipur High School and College [MUBC]</h3>
+                        <p>Secondary School Certificate (SSC) — Class 4 to Class 10.</p>
+                        <div class="timeline-bottom-meta">
+                            <span class="timeline-badge">SSC (Class 4-10)</span>
+                            <span class="timeline-click-hint">View details ↗</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Al-Hera Academy School -->
+                <div class="timeline-row right">
+                    <div class="timeline-card" 
+                         data-tag="PRIMARY EDUCATION" 
+                         data-year="Class of 2005" 
+                         data-institution="Al-Hera Academy School" 
+                         data-major="Primary Schooling — Class 3" 
+                         data-desc="Studied Class 3 at Al-Hera Academy School, strengthening basic mathematics, language literacy, and moral education."
+                         data-badges="Primary School,Class 3,Foundation">
+                        <div class="timeline-date-tag">2005<span>Primary</span></div>
+                        <h3>Al-Hera Academy School</h3>
+                        <p>Primary Education — Class 3.</p>
+                        <div class="timeline-bottom-meta">
+                            <span class="timeline-badge">Class 3</span>
+                            <span class="timeline-click-hint">View details ↗</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Pallabi M.I. Model High School -->
+                <div class="timeline-row left">
+                    <div class="timeline-card" 
+                         data-tag="EARLY PRIMARY EDUCATION" 
+                         data-year="Class of 2003 – 2004" 
+                         data-institution="Pallabi M.I. Model High School" 
+                         data-major="Junior Primary — Class 1 to Class 2" 
+                         data-desc="Completed early primary schooling (Class 1 and Class 2) at Pallabi M.I. Model High School."
+                         data-badges="Primary Roots,Class 1-2">
+                        <div class="timeline-date-tag">2003 – 2004<span>Junior Primary</span></div>
+                        <h3>Pallabi M.I. Model High School</h3>
+                        <p>Junior Primary Schooling — Class 1 to Class 2.</p>
+                        <div class="timeline-bottom-meta">
+                            <span class="timeline-badge">Class 1-2</span>
+                            <span class="timeline-click-hint">View details ↗</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Juvenile English Medium School -->
+                <div class="timeline-row right">
+                    <div class="timeline-card" 
+                         data-tag="EARLY CHILDHOOD EDUCATION" 
+                         data-year="Class of 2002" 
+                         data-institution="Juvenile English Medium School" 
+                         data-major="Kindergarten — Class Play" 
+                         data-desc="Initiated early educational journey at Juvenile English Medium School starting with Class Play."
+                         data-badges="Kindergarten,Class Play,Early Childhood">
+                        <div class="timeline-date-tag">2002<span>Kindergarten</span></div>
+                        <h3>Juvenile English Medium School</h3>
+                        <p>Early Childhood Education — Class Play.</p>
+                        <div class="timeline-bottom-meta">
+                            <span class="timeline-badge">Class Play</span>
+                            <span class="timeline-click-hint">View details ↗</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. Craft & Capabilities -->
+        <section class="craft-grid" id="capabilities">
+            <div class="craft-left">
+                <div class="sub-tag">
+                    <span class="dot-badge"></span>
+                    <span class="tag-text">What I do</span>
+                </div>
+                <h2>Craft & capabilities</h2>
+                <p class="craft-lead">Years of operational HR and management experience have sharpened a specific set of core proficiencies.</p>
+
+                <div class="skill-bar-item">
+                    <div class="skill-bar-header">
+                        <span>Recruitment, Sourcing & Talent Acquisition</span>
+                        <span>95%</span>
+                    </div>
+                    <div class="skill-track"><div class="skill-fill" style="width: 95%;"></div></div>
+                </div>
+
+                <div class="skill-bar-item">
+                    <div class="skill-bar-header">
+                        <span>Employee Onboarding & HR Documentation</span>
+                        <span>92%</span>
+                    </div>
+                    <div class="skill-track"><div class="skill-fill" style="width: 92%;"></div></div>
+                </div>
+
+                <div class="skill-bar-item">
+                    <div class="skill-bar-header">
+                        <span>Attendance, Payroll & Operations</span>
+                        <span>88%</span>
+                    </div>
+                    <div class="skill-track"><div class="skill-fill" style="width: 88%;"></div></div>
+                </div>
+
+                <div class="skill-bar-item">
+                    <div class="skill-bar-header">
+                        <span>Labor Law Compliance & Internal Policies</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="skill-track"><div class="skill-fill" style="width: 90%;"></div></div>
+                </div>
+            </div>
+
+            <div class="craft-right">
+                <div class="sub-tag">
+                    <span class="dot-badge"></span>
+                    <span class="tag-text">Software & Stack</span>
+                </div>
+
+                <div class="tools-group">
+                    <h4>OPERATIONS & HR TECH</h4>
+                    <div class="pills-wrap">
+                        <span class="tech-pill">Zoho CRM</span>
+                        <span class="tech-pill">MS Excel & Office</span>
+                        <span class="tech-pill">Odoo HR</span>
+                        <span class="tech-pill">Payroll Portals</span>
+                    </div>
+                </div>
+
+                <div class="tools-group">
+                    <h4>MEDIA & OUTREACH</h4>
+                    <div class="pills-wrap">
+                        <span class="tech-pill">Canva</span>
+                        <span class="tech-pill">Meta Ads Manager</span>
+                        <span class="tech-pill">Google Ads</span>
+                    </div>
+                </div>
+
+                <div class="tools-group">
+                    <h4>DOMAIN & LEADERSHIP</h4>
+                    <div class="pills-wrap">
+                        <span class="tech-pill">Cross-Team Coordination</span>
+                        <span class="tech-pill">Conflict Resolution</span>
+                        <span class="tech-pill">Event Coordination</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Contact Section with Updated Email -->
+        <section class="contact-invite-box" id="contact">
+            <div>
+                <div class="sub-tag">
+                    <span class="dot-badge"></span>
+                    <span class="tag-text">Say hello</span>
+                </div>
+                <h2>Let's have a<br>conversation</h2>
+                <p>Whether you want to talk about talent acquisition, HR workflows, or organizational synergy — my inbox is always open.</p>
+                <a href="mailto:contact@asrafulalamtamim.xyz" class="btn-pill-dark">Send me an email →</a>
+            </div>
+
+            <div class="social-cards-list">
+                <!-- LinkedIn Direct Link -->
+                <a href="https://linkedin.com/in/asrafulalamtamim" target="_blank" class="social-link-card">
+                    <span>LinkedIn</span>
+                    <span style="color: var(--accent-terracotta);">→</span>
+                </a>
+
+                <!-- Updated Direct Email Link -->
+                <a href="mailto:contact@asrafulalamtamim.xyz" class="social-link-card">
+                    <span>contact@asrafulalamtamim.xyz</span>
+                    <span style="color: var(--accent-terracotta);">→</span>
+                </a>
+
+                <!-- Phone Link -->
+                <a href="tel:+8809696290196" class="social-link-card phone-card-highlight">
+                    <span class="phone-val-text">+8809696290196</span>
+                    <span style="color: var(--accent-terracotta);">→</span>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- 5. Dark Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <!-- Footer Logo -->
+                    <a href="#top" class="footer-logo">
+                        <span class="logo-small-a">a</span><span class="logo-caps">SRAFU</span>
+                        <span class="logo-l-plant">
+                            <span class="logo-caps">L</span>
+                            <span class="flower-growing-out">
+                                <svg viewBox="0 0 46 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 52 C3 34, 12 24, 26 14" stroke="#5a7042" stroke-width="2.5" stroke-linecap="round"/>
+                                    <path d="M8 36 C13 33, 17 37, 14 42 C10 42, 8 38, 8 36 Z" fill="#6c884f"/>
+                                    <path d="M16 25 C14 20, 19 18, 22 21 C22 24, 18 26, 16 25 Z" fill="#7d9c5a"/>
+                                    <g transform="translate(26, 14) rotate(24)">
+                                        <ellipse cx="0" cy="-9" rx="3.8" ry="5.5" fill="#bf5b33"/>
+                                        <ellipse cx="0" cy="9" rx="3.8" ry="5.5" fill="#bf5b33"/>
+                                        <ellipse cx="-9" cy="0" rx="5.5" ry="3.8" fill="#bf5b33"/>
+                                        <ellipse cx="9" cy="0" rx="5.5" ry="3.8" fill="#bf5b33"/>
+                                        <ellipse cx="-6.2" cy="-6.2" rx="4" ry="5" transform="rotate(-45 -6.2 -6.2)" fill="#d9754e"/>
+                                        <ellipse cx="6.2" cy="-6.2" rx="4" ry="5" transform="rotate(45 6.2 -6.2)" fill="#d9754e"/>
+                                        <ellipse cx="-6.2" cy="6.2" rx="4" ry="5" transform="rotate(45 -6.2 6.2)" fill="#d9754e"/>
+                                        <ellipse cx="6.2" cy="6.2" rx="4" ry="5" transform="rotate(-45 6.2 6.2)" fill="#d9754e"/>
+                                        <circle cx="0" cy="0" r="3.8" fill="#faf7f2" stroke="#bf5b33" stroke-width="1.3"/>
+                                        <circle cx="0" cy="0" r="1.8" fill="#bf5b33"/>
+                                    </g>
+                                </svg>
+                            </span>
+                        </span>
+                    </a>
+                    <p class="footer-desc">A personal journal & operational portfolio by aSRAFUL. Exploring the craft of people management, living slowly, and thinking deeply.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>WRITING</h4>
+                    <ul>
+                        <li><a href="index.html">All Essays</a></li>
+                        <li><a href="index.html">Slow Living</a></li>
+                        <li><a href="index.html">Design Notes</a></li>
+                        <li><a href="index.html">Travel Letters</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>ABOUT</h4>
+                    <ul>
+                        <li><a href="#top">My Story</a></li>
+                        <li><a href="#experience">Milestones</a></li>
+                        <li><a href="#capabilities">Capabilities</a></li>
+                        <li><a href="mailto:contact@asrafulalamtamim.xyz">Newsletter</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>CONNECT</h4>
+                    <ul>
+                        <li><a href="https://linkedin.com/in/asrafulalamtamim" target="_blank">LinkedIn</a></li>
+                        <li><a href="https://wa.me/8809696290196" target="_blank">WhatsApp</a></li>
+                        <li><a href="mailto:contact@asrafulalamtamim.xyz">Email Me</a></li>
+                        <li><a href="tel:+8809696290196">Mirpur, Dhaka</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-craft-msg">
+                    <span>&copy; 2026 aSRAFUL. Made with <span class="heart-icon">🧡</span> and too many thoughtful drafts.</span>
+                </div>
+                <div>
+                    <a href="#top" class="back-to-top">Back to top ↑</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Cursor, Modal Logic & Animation Script -->
+    <script>
+        // Follower Cursor
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        let mouseX = 0, mouseY = 0;
+        let ringX = 0, ringY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            dot.style.left = `${mouseX}px`;
+            dot.style.top = `${mouseY}px`;
+        });
+
+        function renderCursor() {
+            ringX += (mouseX - ringX) * 0.15;
+            ringY += (mouseY - ringY) * 0.15;
+            ring.style.left = `${ringX}px`;
+            ring.style.top = `${ringY}px`;
+            requestAnimationFrame(renderCursor);
+        }
+        renderCursor();
+
+        function attachHoverEvents() {
+            const clickables = document.querySelectorAll('a, button, .timeline-card, .tech-pill, .social-link-card, .floating-widget, .btn-hire-lux, .modal-close-btn, .back-to-top');
+            clickables.forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+            });
+        }
+        attachHoverEvents();
+
+        // Modal Logic
+        const milestoneModal = document.getElementById('milestoneModal');
+        const closeMilestoneBtn = document.getElementById('closeMilestoneModal');
+        const modalTag = document.getElementById('modalTag');
+        const modalYear = document.getElementById('modalYear');
+        const modalInstitution = document.getElementById('modalInstitution');
+        const modalMajor = document.getElementById('modalMajor');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalBadges = document.getElementById('modalBadges');
+
+        const timelineCards = document.querySelectorAll('.timeline-card');
+        timelineCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                modalTag.innerText = card.getAttribute('data-tag') || 'MILESTONE';
+                modalYear.innerText = card.getAttribute('data-year') || '';
+                modalInstitution.innerText = card.getAttribute('data-institution') || '';
+                modalMajor.innerText = card.getAttribute('data-major') || '';
+                modalDescription.innerText = card.getAttribute('data-desc') || '';
+
+                const badges = (card.getAttribute('data-badges') || '').split(',');
+                modalBadges.innerHTML = '';
+                badges.forEach(b => {
+                    if (b.trim()) {
+                        const pill = document.createElement('span');
+                        pill.className = 'modal-badge-pill';
+                        pill.innerText = b.trim();
+                        modalBadges.appendChild(pill);
+                    }
+                });
+
+                milestoneModal.classList.add('open');
+                createClickBurst(e.clientX, e.clientY, 30);
+            });
+        });
+
+        closeMilestoneBtn.addEventListener('click', () => {
+            milestoneModal.classList.remove('open');
+        });
+        milestoneModal.addEventListener('click', (e) => {
+            if (e.target === milestoneModal) milestoneModal.classList.remove('open');
+        });
+
+        // Letter Modal
+        const hireBtn = document.getElementById('hireMeTrigger');
+        const letterModal = document.getElementById('letterModal');
+        const closeLetterBtn = document.getElementById('closeLetterBtn');
+
+        function updateLetterTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            document.getElementById('currentLetterTime').innerText = `Dhaka, BD — ${timeStr}`;
+        }
+        setInterval(updateLetterTime, 1000);
+        updateLetterTime();
+
+        hireBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            letterModal.classList.add('open');
+            createClickBurst(e.clientX, e.clientY, 35);
+        });
+
+        closeLetterBtn.addEventListener('click', () => {
+            letterModal.classList.remove('open');
+        });
+
+        letterModal.addEventListener('click', (e) => {
+            if (e.target === letterModal) letterModal.classList.remove('open');
+        });
+
+        // Canvas Engine
+        const canvas = document.getElementById('interactive-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const petalColors = ['#bf5b33', '#d9754e', '#e58e6d', '#eed3c4', '#f1a88b'];
+        const petals = [];
+        const petalCount = 20;
+
+        class Petal {
+            constructor() { this.reset(true); }
+            reset(initial = false) {
+                this.x = Math.random() * width;
+                this.y = initial ? Math.random() * height : -20;
+                this.size = Math.random() * 7 + 5;
+                this.color = petalColors[Math.floor(Math.random() * petalColors.length)];
+                this.speedY = Math.random() * 1.2 + 0.7;
+                this.speedX = Math.random() * 1.4 - 0.7;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = (Math.random() - 0.5) * 2;
+                this.oscillation = Math.random() * Math.PI * 2;
+                this.oscillationSpeed = Math.random() * 0.03 + 0.01;
+                this.opacity = Math.random() * 0.4 + 0.3;
+            }
+            update() {
+                this.y += this.speedY;
+                this.oscillation += this.oscillationSpeed;
+                this.x += Math.sin(this.oscillation) * 1.2 + this.speedX;
+                this.rotation += this.rotSpeed;
+                if (this.y > height + 20 || this.x < -30 || this.x > width + 30) this.reset(false);
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(this.size / 2, -this.size / 2, this.size, -this.size / 4, this.size, 0);
+                ctx.bezierCurveTo(this.size, this.size / 4, this.size / 2, this.size / 2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+        for (let i = 0; i < petalCount; i++) petals.push(new Petal());
+
+        const glowflies = [];
+        const glowflyCount = 22;
+
+        class Glowfly {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2.5 + 1.2;
+                this.baseAlpha = Math.random() * 0.6 + 0.3;
+                this.alpha = this.baseAlpha;
+                this.speedX = (Math.random() - 0.5) * 1.1;
+                this.speedY = (Math.random() - 0.5) * 1.1;
+                this.pulseSpeed = Math.random() * 0.04 + 0.02;
+                this.pulseAngle = Math.random() * Math.PI * 2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.pulseAngle += this.pulseSpeed;
+                this.alpha = this.baseAlpha + Math.sin(this.pulseAngle) * 0.35;
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+            draw() {
+                ctx.save();
+                const glow = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 5);
+                glow.addColorStop(0, `rgba(255, 215, 140, ${Math.max(0, this.alpha)})`);
+                glow.addColorStop(0.4, `rgba(191, 91, 51, ${Math.max(0, this.alpha * 0.45)})`);
+                glow.addColorStop(1, 'rgba(191, 91, 51, 0)');
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = `rgba(255, 255, 240, ${Math.max(0, this.alpha + 0.2)})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+        for (let i = 0; i < glowflyCount; i++) glowflies.push(new Glowfly());
+
+        const burstParticles = [];
+        class SparkParticle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 5 + 2;
+                this.vx = Math.cos(angle) * velocity;
+                this.vy = Math.sin(angle) * velocity;
+                this.size = Math.random() * 3 + 2;
+                this.color = Math.random() > 0.4 ? '#bf5b33' : '#ffd175';
+                this.alpha = 1;
+                this.decay = Math.random() * 0.025 + 0.015;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                this.vx *= 0.94; this.vy *= 0.94;
+                this.alpha -= this.decay;
+            }
+            draw() {
+                if (this.alpha <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function createClickBurst(x, y, count = 25) {
+            for (let i = 0; i < count; i++) burstParticles.push(new SparkParticle(x, y));
+        }
+
+        window.addEventListener('click', (e) => {
+            createClickBurst(e.clientX, e.clientY, 20);
+        });
+
+        function mainCanvasLoop() {
+            ctx.clearRect(0, 0, width, height);
+            petals.forEach(p => { p.update(); p.draw(); });
+            glowflies.forEach(g => { g.update(); g.draw(); });
+            for (let i = burstParticles.length - 1; i >= 0; i--) {
+                burstParticles[i].update();
+                burstParticles[i].draw();
+                if (burstParticles[i].alpha <= 0) burstParticles.splice(i, 1);
+            }
+            requestAnimationFrame(mainCanvasLoop);
+        }
+        mainCanvasLoop();
+    </script>
+</body>
+</html>
